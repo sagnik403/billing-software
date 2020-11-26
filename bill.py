@@ -1,6 +1,9 @@
 from tkinter import *
 import math
 import random
+from tkinter import messagebox
+import os
+# import messagebox
 
 class Bill_App:
     def __init__(self, root):
@@ -72,7 +75,7 @@ class Bill_App:
         cbill_lb1 = Label(F1, text=" Bill",bg="#074463",fg="white" , font=("times new roman",18,"bold")).grid(row=0, column=4, padx=20, pady=5)
         cbill_txt = Entry(F1,width=15,textvariable=self.bill_no,font="arial 15",bd=7,relief=SUNKEN).grid(row=0, column=5, padx=10, pady=5)
 
-        bill_btn = Button(F1, text="Search",textvariable=self.search_bill, width=10, font="arial 12 bold").grid(row=0, column=6, pady=10,padx=10)
+        bill_btn = Button(F1, text="Search",command=self.find_bill,textvariable=self.search_bill, width=10, font="arial 12 bold").grid(row=0, column=6, pady=10,padx=10)
 
         # ============================ products=============================================================
 
@@ -276,12 +279,23 @@ class Bill_App:
 
         self.textarea.insert(END,"\n-----------------------------------")
         self.textarea.insert(END, f"\nTotal price\t\t\t{self.billing_price}")
-        
+        self.save_bill()
         
 
-
+        # ****************************saving of bill*******************************************************
+    def save_bill(self):
+        op = messagebox.askyesno("save Bill","Do you want to save the bil?")
+        if op>0:
+            self.bill_data = self.textarea.get('1.0',END)
+            f1 = open("Bills/"+str(self.bill_no.get())+".txt","w")
+            f1.write(self.bill_data)
+            f1.close
+            messagebox.showinfo("saved", f"Bill no. : {self.bill_no.get()} saved successfully")
+        else:
+            return
 
 
 root = Tk()
 obj = Bill_App(root)
 root.mainloop()
+
